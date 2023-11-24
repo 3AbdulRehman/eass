@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "549720508674",
+    "project_id": "eass-using-rfid",
+    "storage_bucket": "eass-using-rfid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549720508674:android:5498829dbe9ebd93aa5a1b",
+        "android_client_info": {
+          "package_name": "com.ecomile.eass"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmToqDj32lPLSXOFe5Cuntt6s1D2KsdeE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549720508674:android:d1f99b83580a75f9aa5a1b",
+        "android_client_info": {
+          "package_name": "com.ecomile.eass"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmToqDj32lPLSXOFe5Cuntt6s1D2KsdeE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
