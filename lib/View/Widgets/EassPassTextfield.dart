@@ -1,3 +1,4 @@
+import 'package:eass/constant.dart';
 import 'package:flutter/material.dart';
 
 class EassPassField extends StatefulWidget {
@@ -45,7 +46,7 @@ class _ForexPassFieldState extends State<EassPassField> {
           ),
           labelText: widget.labelText,
           labelStyle: TextStyle(
-            fontSize: responsiveTextSize(18),
+            fontSize: responsiveTextSize(20),
             color: Colors.black,
             fontFamily: "RegularFonts",
             fontWeight: FontWeight.bold,
@@ -54,7 +55,7 @@ class _ForexPassFieldState extends State<EassPassField> {
           suffixIcon: IconButton(
             icon: Icon(
               _isObscure ? Icons.visibility_off : Icons.visibility,
-              color: Colors.grey, // You can customize the icon color
+              color: kTextColor, // You can customize the icon color
             ),
             onPressed: _togglePasswordVisibility,
           ),

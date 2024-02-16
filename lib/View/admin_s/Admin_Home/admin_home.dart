@@ -1,11 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eass/View/Widgets/Eass_Button.dart';
+import 'package:eass/View/admin_s/Add%20Users/eidt_update.dart';
+import 'package:eass/View/admin_s/Admin%20Users/Admin_Database.dart';
+import 'package:eass/View/admin_s/Admin%20Users/Edit_update_admin.dart';
 import 'package:eass/View/admin_s/Admin_Home/mycard.dart';
-import 'package:eass/View/admin_s/Drawer_Screen.dart';
+import 'package:eass/View/admin_s/Add%20Users/user_database.dart';
+import 'package:eass/View/admin_s/Add%20Users/add_users.dart';
+import 'package:eass/View/sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 import '../../../constant.dart';
+import '../Admin Users/add_admin.dart';
+import '../admin_drawer.dart';
 
 class Admin_Home extends StatefulWidget {
   const Admin_Home({super.key});
@@ -14,8 +24,35 @@ class Admin_Home extends StatefulWidget {
   State<Admin_Home> createState() => _Admin_HomeState();
 }
 
+
+
 class _Admin_HomeState extends State<Admin_Home> {
+  final CollectionReference _collectionRef = FirebaseFirestore.instance.collection('users');
+
+  bool isLoading = true; // Flag to indicate whether data is still being fetched
+
+  late int documentCount=0;
+  Future<void> _fetchDocumentCount() async {
+    try {
+      QuerySnapshot querySnapshot = await _collectionRef.get();
+      setState(() {
+        documentCount = querySnapshot.docs.length;
+        isLoading = false; // Set the flag to indicate data is ready
+      });
+    } catch (error) {
+      print('Error: $error');
+      setState(() {
+        isLoading = false; // Set the flag even in case of an error
+      });
+    }
+  }
+
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchDocumentCount();
+  }
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -26,6 +63,7 @@ class _Admin_HomeState extends State<Admin_Home> {
     }
     return  Scaffold(
     //  drawer: Drawer_Screen(),
+      drawer: Admin_Drawer(),
       body: Stack(
         children: [
           HeaderBackground(
@@ -43,7 +81,24 @@ class _Admin_HomeState extends State<Admin_Home> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Exam Attendance Student System",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: responsiveTextSize(15)),),
+                             GestureDetector(
+                                  child: Icon(Icons.logout,
+                                    size: 32,
+                                    color: Colors.white,),
+                                  onTap: () async {
+                                    try{
+                                     await FirebaseAuth.instance.signOut();
+                                      Get.offAll(SignIn());
+                                    }catch (e){
+                                      print("Error During Logout :$e");
+
+                                    }
+
+                                  },
+
+                            ),
+                            SizedBox(height: h*0.005,),
+                            Text("Exam Attendance Student System",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: responsiveTextSize(17)),),
                             SizedBox(height: h*0.002,),
                             Text("Dashboard",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: responsiveTextSize(25)),),
 
@@ -56,95 +111,106 @@ class _Admin_HomeState extends State<Admin_Home> {
                             color: Colors.white,
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage("https://scontent-mct1-1.xx.fbcdn.net/v/t39.30808-6/340765512_1904069496593959_8180849529892788408_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEU78WnvO0P0KCI5DVdd8t8G4JYhFLKhagbgliEUsqFqJTa4FRNJG97mQemoIyIMeFX-fy8dtiZlYutOe_XFv9G&_nc_ohc=VsUom7x7ZPIAX95z0Zx&_nc_ht=scontent-mct1-1.xx&oh=00_AfA96I-PYhQ7zL026duhxtqIon9wRBS1xB4X8u6RHm9tDw&oe=65651F7B")),
+                              image:AssetImage('assets/images/logo.png')
+                            ),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                        )
+                        ),
+                        //Image
                       ],
                     ),
                   ),
                 ),
-                MyCard(
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                          right: 8,
-                          bottom: 0,
-                          child: Container(
-                            //height: h*0.03,
-                            width: w*0.45,
-                            child: PieChart(
-                              PieChartData(
-                                startDegreeOffset: 0,
-                                  sectionsSpace: 0,
-                                  centerSpaceRadius: 43,
-                                  borderData: FlBorderData(show: false),
-                                sections: [
-                                  PieChartSectionData(
-                                    value: 40,color: Colors.green,title: "120",),
-                                  PieChartSectionData(
-                                      value: 15,color: Colors.red,title: "17"),
-                                  PieChartSectionData(
-                                      value: 23,color: Colors.yellow,title: "50"),
-                                ]
-                              )
-                            ),
-                          )
-                      ),
-                      Positioned(
-                        left: 16,
-                          top: 15,
-                          bottom: 0,
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Text("120",style: TextStyle(fontSize: responsiveTextSize(50),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),),
-                                SizedBox(height: 0.002,),
-                                Text("Total Students",style: TextStyle(fontSize: responsiveTextSize(17),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),),
-                                SizedBox(height: h*0.02,),
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: h*0.015,
-                                      width: w*0.03,
-                                      decoration: BoxDecoration(
-                                        color: Colors.yellow,
-                                        borderRadius: BorderRadius.circular(16)
-                                      ),
-                                    ),SizedBox(height: h*0.01,),
-                                    Text("  Leave Students",style: TextStyle(fontSize: responsiveTextSize(15)),),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Text("50",style: TextStyle(fontSize: responsiveTextSize(30),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),),
-                                  ],
-                                ),
-                                SizedBox(height: h*0.01,),
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: h*0.015,
-                                      width: w*0.03,
-                                      decoration: BoxDecoration(
-                                          color: Colors.red,
+                SingleChildScrollView(
+                  child: MyCard(
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                            right: 8,
+                            bottom: 0,
+                            child: Container(
+                              //height: h*0.03,
+                              width: w*0.45,
+                              child: PieChart(
+                                PieChartData(
+                                  startDegreeOffset: 0,
+                                    sectionsSpace: 2,
+                                    centerSpaceRadius: 43,
+                                    borderData: FlBorderData(show: false),
+                                  sections: [
+                                     PieChartSectionData(
+                                    value: 40,color: Colors.green,title: "$documentCount",),
+                                    PieChartSectionData(
+                                        value: 15,color: Colors.red,title: "17"),
+                                    PieChartSectionData(
+                                        value: 23,color: Colors.yellow,title: "50"),
+                                  ]
+                                )
+                              ),
+                            )
+                        ),
+                        Positioned(
+                          left: 16,
+                            top: 15,
+                            bottom: 0,
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: isLoading
+                                        ? CircularProgressIndicator():
+                                    Text('$documentCount',style: TextStyle(fontSize: 40,fontFamily: 'BoldFonts',fontWeight: FontWeight.bold),),
+
+                                  ),
+                                  SizedBox(height: 0.002,),
+                                  Text("Total Students",
+                                    style: TextStyle(fontSize: responsiveTextSize(17),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),
+                                  ),
+                                  SizedBox(height: h*0.02,),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: h*0.015,
+                                        width: w*0.03,
+                                        decoration: BoxDecoration(
+                                          color: Colors.yellow,
                                           borderRadius: BorderRadius.circular(16)
-                                      ),
-                                    ),SizedBox(height: h*0.01,),
-                                    Text("  Absent Students",style: TextStyle(fontSize: responsiveTextSize(15)),),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Text("17",style: TextStyle(fontSize: responsiveTextSize(30),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                      ),
-                    ],
+                                        ),
+                                      ),SizedBox(height: h*0.01,),
+                                      Text(" Present Students",style: TextStyle(fontSize: responsiveTextSize(15)),),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text("50",style: TextStyle(fontSize: responsiveTextSize(30),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),),
+                                    ],
+                                  ),
+                                  SizedBox(height: h*0.01,),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: h*0.015,
+                                        width: w*0.03,
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius: BorderRadius.circular(16)
+                                        ),
+                                      ),SizedBox(height: h*0.01,),
+                                      Text(" Absent Students",style: TextStyle(fontSize: responsiveTextSize(15)),),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text("17",style: TextStyle(fontSize: responsiveTextSize(30),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
@@ -177,7 +243,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                                   width: w*0.19,
                                                   decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(12),
-                                                      boxShadow: [BoxShadow(color: Colors.black12)]
+                                                      boxShadow: [BoxShadow(color: kPrimaryColor.withOpacity(0.1))]
                                                   ),
                                                   child: Center(
                                                     child: FaIcon(FontAwesomeIcons.userPlus,
@@ -191,7 +257,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                             ],
                                           ),
                                           onTap: (){
-
+                                            Get.to(AddUsers());
                                           },
                                         ),
                                         SizedBox(width: w*0.04),
@@ -205,7 +271,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                                   width: w*0.19,
                                                   decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(12),
-                                                      boxShadow: [BoxShadow(color: Colors.black12)]
+                                                      boxShadow: [BoxShadow(color: kPrimaryColor.withOpacity(0.1))]
                                                   ),
                                                   child: Center(
                                                     child: FaIcon(FontAwesomeIcons.userEdit,
@@ -219,6 +285,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                             ],
                                           ),
                                           onTap: (){
+                                            Get.to(EditAndUpdate());
 
                                           },
                                         ),
@@ -233,7 +300,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                                   width: w*0.19,
                                                   decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(12),
-                                                      boxShadow: [BoxShadow(color: Colors.black12)]
+                                                      boxShadow: [BoxShadow(color: kPrimaryColor.withOpacity(0.1))]
                                                   ),
                                                   child: Center(
                                                     child: FaIcon(FontAwesomeIcons.database,
@@ -247,6 +314,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                             ],
                                           ),
                                           onTap: (){
+                                            Get.to(UserDatabase());
 
                                           },
                                         ),
@@ -273,7 +341,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                                   width: w*0.19,
                                                   decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(12),
-                                                      boxShadow: [BoxShadow(color: Colors.black12)]
+                                                      boxShadow: [BoxShadow(color: kPrimaryColor.withOpacity(0.1))]
                                                   ),
                                                   child: Center(
                                                     child: FaIcon(FontAwesomeIcons.userPlus,
@@ -287,6 +355,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                             ],
                                           ),
                                           onTap: (){
+                                            Get.to(Add_Admin());
 
                                           },
                                         ),
@@ -301,7 +370,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                                   width: w*0.19,
                                                   decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(12),
-                                                      boxShadow: [BoxShadow(color: Colors.black12)]
+                                                      boxShadow: [BoxShadow(color: kPrimaryColor.withOpacity(0.1))]
                                                   ),
                                                   child: Center(
                                                     child: FaIcon(FontAwesomeIcons.userEdit,
@@ -315,6 +384,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                             ],
                                           ),
                                           onTap: (){
+                                            Get.to(EditAndUpdateAdmin());
 
                                           },
                                         ),
@@ -329,7 +399,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                                   width: w*0.19,
                                                   decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(12),
-                                                      boxShadow: [BoxShadow(color: Colors.black12)]
+                                                      boxShadow: [BoxShadow(color: kPrimaryColor.withOpacity(0.1))]
                                                   ),
                                                   child: Center(
                                                     child: FaIcon(FontAwesomeIcons.database,
@@ -343,6 +413,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                             ],
                                           ),
                                           onTap: (){
+                                            Get.to(Admin_Database());
 
                                           },
                                         ),
@@ -358,8 +429,10 @@ class _Admin_HomeState extends State<Admin_Home> {
                 ),
                 SizedBox(height: h*0.07,),
                 EassButton(label: "Lagout", onPressed: (){
+                  Get.to(SignIn());
 
                 }),
+                SizedBox(height: h*0.015,),
               ],
             ),
           )

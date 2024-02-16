@@ -1,4 +1,4 @@
-import 'package:eass/View/Home.dart';
+import 'package:eass/View/Home/Home.dart';
 import 'package:eass/View/onboarding_screens/screen1.dart';
 import 'package:eass/View/onboarding_screens/screen2.dart';
 import 'package:eass/View/onboarding_screens/screen3.dart';

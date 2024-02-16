@@ -1,21 +1,39 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eass/View/Widgets/EassPassTextfield.dart';
 import 'package:eass/View/Widgets/Eass_Button.dart';
 import 'package:eass/View/Widgets/EassemailTextfield.dart';
+import 'package:eass/View/admin_s/Add%20Users/add_users.dart';
 import 'package:eass/View/admin_s/Admin_Home/admin_home.dart';
 import 'package:eass/constant.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'Home.dart';
+import 'Home/Home.dart';
+import 'Widgets/Easstextfield.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
    SignIn({super.key});
 
-  final TextEditingController emailController = TextEditingController();
-   final TextEditingController passController = TextEditingController();
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  final TextEditingController rollnumberController = TextEditingController();
+
+  final TextEditingController passController = TextEditingController();
+  @override
+  void dispose() {
+    rollnumberController.dispose();
+    passController.dispose();
+    super.dispose();
+  }
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 
-   @override
+  @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -46,7 +64,7 @@ class SignIn extends StatelessWidget {
                   fontFamily: "RegularFonts"
                 ),),
             ),
-          
+
             SizedBox(
               height: h * 0.05,
             ),
@@ -68,21 +86,17 @@ class SignIn extends StatelessWidget {
               height: h * 0.02,
             ),
             Form(
+              key: _formKey,
               child: Column(
                 children: [
-                  EassEmaiTextField(
-                      labelText: "Email",
-                      controller: emailController,
+                  EassTextField(labelText: "Enter Your ID", controller: rollnumberController, keyboardType: TextInputType.text,
                     validator: (value){
-                      if (value == null || value.isEmpty) {
-                        return 'Email is required';
+                      if(value == null || value.isEmpty){
+                        return "ID is Required";
+                      }else{
+                        return null;
                       }
-                      final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
-                      if (!emailRegExp.hasMatch(value)) {
-                        return 'Invalid email format';
-                      }
-                      return null;
-                    }
+                    },
                   ),
                   SizedBox(
                     height: h * 0.02,
@@ -105,12 +119,14 @@ class SignIn extends StatelessWidget {
               height: h * 0.04,
             ),
             EassButton(label: "Sign in", onPressed: (){
-              Get.offAll(Admin_Home());
+              if(_formKey.currentState!.validate()){
+                _signIn();
+              }
 
             }
             ),
             SizedBox(
-              height: h * 0.02,
+              height: h * 0.04,
             ),
             Center(
               child: Text(
@@ -121,28 +137,12 @@ class SignIn extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(height: h * 0.02,),
+            SizedBox(height: h * 0.025,),
             Center(
-              child: RichText(
-                text: TextSpan(
-                    text: "Seamlessly manage and track with our RFID System ",
-                    style: TextStyle(
-                        fontFamily: 'RegularFonts',
-                        fontSize: responsiveTextSize(13),
-                        color: Colors.black,
-                      fontWeight: FontWeight.bold
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "Terms of use",
-                        style: TextStyle(
-                          fontFamily: 'RegularFonts',
-                          fontSize: responsiveTextSize(13),
-                          color: kTextColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ]),
+              child: Row(
+                children: [
+                  Text("Student Register Y")
+                ],
               ),
             )
           ],
@@ -150,4 +150,54 @@ class SignIn extends StatelessWidget {
       ),
     );
   }
+  void _signIn() async {
+    String idOrRollNumber = rollnumberController.text; // Assuming you have a controller for ID or roll number
+    String pass = passController.text;
+
+    // Hardcoded super admin credentials
+    String superAdminIdOrRollNumber = 'admin123';
+    String superAdminPassword = '12345678';
+
+    try {
+      // Attempt super admin authentication
+      if (idOrRollNumber == superAdminIdOrRollNumber && pass == superAdminPassword) {
+        // Login as super admin
+        print("Super Admin Successfully Logged In");
+        Get.to(Admin_Home());
+        return;
+      }
+
+      // Attempt admin authentication
+      QuerySnapshot adminSnapshot = await FirebaseFirestore.instance.collection('admins')
+          .where('id', isEqualTo: idOrRollNumber)
+          .where('password', isEqualTo: pass)
+          .get();
+
+      if (adminSnapshot.docs.isNotEmpty) {
+        // Login as admin
+        print("Admin Successfully Logged In");
+        Get.to(AddUsers());
+        return;
+      }
+
+
+      // Attempt regular user authentication
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: '$idOrRollNumber@gmail.com', // Use a dummy email with a unique domain
+        password: pass,
+      );
+
+      User? user = userCredential.user;
+
+      if (user != null) {
+        print("User Successfully Logged In");
+        Get.to(Home());
+      }
+    } catch (e) {
+      print("Error logging in: $e");
+      Get.snackbar("Error", "Invalid ID or Roll Number and Password",
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
 }

@@ -1,52 +1,41 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class EassDropdown extends StatelessWidget {
-  final String selectedValue;
-  final List<Map<String, String>> dropDownListData;
-  final void Function(String?) onChanged;
-  final String labelText; // Added parameter for the label text
+import '../../constant.dart';
 
-  EassDropdown({
+
+class ReusableDropdownButton extends StatelessWidget {
+  final List<String> items;
+  final String selectedValue;
+  final ValueChanged<String?> onChanged;
+  final String labelText;
+  final IconData prefixIcon;
+
+  ReusableDropdownButton({
+    required this.items,
     required this.selectedValue,
-    required this.dropDownListData,
     required this.onChanged,
-    this.labelText = "Select Package", // Default label text
+    required this.labelText,
+    required this.prefixIcon,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30),
-      child: InputDecorator(
-        decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-          ),
+      padding: EdgeInsets.only(left: 30, right: 30),
+      child: DropdownButtonFormField<String>(
+        value: selectedValue,
+        items: items.map((e) {
+          return DropdownMenuItem(child: Text(e), value: e);
+        }).toList(),
+        onChanged: onChanged,
+        icon: const Icon(
+          Icons.arrow_drop_down_circle,
+          color: kTextColor, // Ensure that kTextColor is correctly defined
         ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            value: selectedValue,
-            isDense: true,
-            isExpanded: true,
-            menuMaxHeight: 200,
-            items: [
-              DropdownMenuItem<String>(
-                child: Text(
-                  labelText, // Use the labelText parameter
-                  style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "RegularFonts"),
-                ),
-                value: "",
-              ),
-              ...dropDownListData.map<DropdownMenuItem<String>>((e) {
-                return DropdownMenuItem<String>(
-                  child: Text(e['title']!),
-                  value: e['value'],
-                );
-              }).toList(),
-            ],
-            onChanged: onChanged,
-          ),
+        decoration: InputDecoration(
+          labelText: labelText,
+          prefixIcon: Icon(prefixIcon, color: kTextColor), // Ensure kTextColor is defined
+          border: UnderlineInputBorder(),
         ),
       ),
     );
