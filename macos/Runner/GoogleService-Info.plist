@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyBdhQy1tsomQ0nFoMY6AgZu43r3Innz9Q8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>635866209956</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ecomile.eass.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>ardunio-8d1eb</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ardunio-8d1eb.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:635866209956:ios:94389ba89c39fba4765031</string>
+</dict>
+</plist>

@@ -42,7 +42,7 @@ class Eass extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: YourScreen(),
-      home: GoogleSheetAddUser()//seenOnboard == true? SignIn(): Onboarding(),
+      home:seenOnboard == true? SignIn(): Onboarding(),
     );
   }
 }
