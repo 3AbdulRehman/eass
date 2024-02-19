@@ -1,9 +1,10 @@
-import 'package:eass/Model/Real%20Time%20Card%20Value/DateValue.dart';
-import 'package:eass/Model/Real%20Time%20Card%20Value/TimeValue.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eass/Model/Real%20Time%20Card%20Value/card_value.dart';
+
+import '../../../Model/Real-Time Card Value, Date & Time/DateValue.dart';
+import '../../../Model/Real-Time Card Value, Date & Time/TimeValue.dart';
+import '../../../Model/Real-Time Card Value, Date & Time/card_value.dart';
 
 class YourScreen extends StatefulWidget {
   @override
