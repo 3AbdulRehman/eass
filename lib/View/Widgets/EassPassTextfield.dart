@@ -35,33 +35,30 @@ class _ForexPassFieldState extends State<EassPassField> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 30, right: 30),
-      child: TextFormField(
-        obscureText: _isObscure,
-        controller: widget.controller,
-        decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-          ),
-          labelText: widget.labelText,
-          labelStyle: TextStyle(
-            fontSize: responsiveTextSize(20),
-            color: Colors.black,
-            fontFamily: "RegularFonts",
-            fontWeight: FontWeight.bold,
-          ),
-          contentPadding: EdgeInsets.only(left: 5, right: 5, bottom: 5, top: 5),
-          suffixIcon: IconButton(
-            icon: Icon(
-              _isObscure ? Icons.visibility_off : Icons.visibility,
-              color: kTextColor, // You can customize the icon color
-            ),
-            onPressed: _togglePasswordVisibility,
-          ),
+    return TextFormField(
+      obscureText: _isObscure,
+      controller: widget.controller,
+      decoration: InputDecoration(
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.black),
         ),
-        validator: widget.validator,
+        labelText: widget.labelText,
+        labelStyle: TextStyle(
+          fontSize: responsiveTextSize(20),
+          color: Colors.black,
+          fontFamily: "RegularFonts",
+          fontWeight: FontWeight.bold,
+        ),
+        contentPadding: EdgeInsets.only(left: 5, right: 5, bottom: 5, top: 5),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _isObscure ? Icons.visibility_off : Icons.visibility,
+            color: kTextColor, // You can customize the icon color
+          ),
+          onPressed: _togglePasswordVisibility,
+        ),
       ),
+      validator: widget.validator,
     );
   }
 }

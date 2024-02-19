@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eass/Model/Real%20Time%20Card%20Value/card_value.dart';
 import 'package:eass/View/Widgets/EassPassTextfield.dart';
 import 'package:eass/View/Widgets/Eass_Button.dart';
 import 'package:eass/View/Widgets/Easstextfield.dart';
@@ -10,6 +9,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../../Model/Real-Time Card Value, Date & Time/card_value.dart';
 import '../../../constant.dart';
 import '../../sign_in.dart';
 

@@ -101,16 +101,19 @@ class _SignInState extends State<SignIn> {
                   SizedBox(
                     height: h * 0.02,
                   ),
-                  EassPassField(labelText: "Password",
-                      controller: passController,
-                    validator: (value){
-                      if(value== null || value.isEmpty){
-                        return "Pasword is required";
-                      }else if(value.length < 8){
-                        return 'Password must be at least 8 characters long';
-                      }
-                      return null;
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30,right: 30),
+                    child: EassPassField(labelText: "Password",
+                        controller: passController,
+                      validator: (value){
+                        if(value== null || value.isEmpty){
+                          return "Pasword is required";
+                        }else if(value.length < 8){
+                          return 'Password must be at least 8 characters long';
+                        }
+                        return null;
+                      },
+                    ),
                   )
                 ],
               ),
@@ -137,11 +140,17 @@ class _SignInState extends State<SignIn> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(height: h * 0.025,),
+            SizedBox(height: h * 0.045,),
             Center(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Student Register Y")
+                  Text("Seamlessly Manage & Track with RFID System",style: TextStyle(fontSize: responsiveTextSize(13),fontFamily: 'RegularFonts',fontWeight: FontWeight.bold),),
+                  SizedBox(width: w*0.002,),
+                  GestureDetector(child: Text("Terms of Use",style: TextStyle(fontSize: responsiveTextSize(15),fontFamily: 'RegularFonts',fontWeight: FontWeight.bold,color: kPrimaryColor),),
+                  onTap: (){},
+                  )
+
                 ],
               ),
             )
