@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eass/View/Widgets/EassPassTextfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +20,47 @@ class RegisterStudent extends StatefulWidget {
 }
 
 class _RegisterStudentState extends State<RegisterStudent> {
-  TextEditingController passController = TextEditingController();
+
+
+final  CardValue cardValue = Get.put(CardValue());
+
+/////////////////////////
+  /// Date & Time
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050),
+    );
+
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: selectedTime.hour + 1, minute: 0), // Next hour
+    );
+
+    if (pickedTime != null && pickedTime != selectedTime) {
+      setState(() {
+        selectedTime = pickedTime;
+        print(selectedTime);
+      });
+    }
+  }
+  final _formfield = GlobalKey<FormState>();
 
   //////
   TextEditingController rollNoController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController departmentController = TextEditingController();
-  TextEditingController semesterController = TextEditingController();
   /////
   String? selectedPaper;
   List<String> papers = []; // List to hold paper values
@@ -44,9 +79,6 @@ class _RegisterStudentState extends State<RegisterStudent> {
     }
     Map<String, dynamic>? student = await StudentRecordsSheet.getById(rollNo);
     if (student != null) {
-      nameController.text = student['Name'];
-      departmentController.text = student['Department'];
-      semesterController.text = student['Semester'];
       // Populate paper values from student data
       setState(() {
         papers = [
@@ -89,11 +121,6 @@ class _RegisterStudentState extends State<RegisterStudent> {
 
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    cardValue.fetchCardValue();
-  }
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -143,6 +170,7 @@ class _RegisterStudentState extends State<RegisterStudent> {
               child: Form(
                   child:Column(
                     children: [
+
                       Center(
                         child: GetX<CardValue>(
                             init: cardValue,
@@ -152,7 +180,6 @@ class _RegisterStudentState extends State<RegisterStudent> {
 
                             }),
                       ),
-                      SizedBox(height: h*0.022,),
                       Row(
                         children: [
                           Expanded(
@@ -162,30 +189,12 @@ class _RegisterStudentState extends State<RegisterStudent> {
                             ),
                           ),
                           GestureDetector(
-                              child: Icon(Icons.flip_camera_android_outlined,size: 25,color: kTextColor,),
-                              onTap:_searchStudent
+                            child: Icon(Icons.flip_camera_android_outlined, size: 25, color: kTextColor),
+                            onTap: _searchStudent,
                           ),
-
                         ],
                       ),
-                      SizedBox(height: h*0.002,),
-                      TextField(
-                        controller: nameController,
-                        decoration: InputDecoration(labelText: 'Name'),
-                        readOnly: true,
-                      ),
-                      SizedBox(height: h*0.002,),
-                      TextField(
-                        controller: departmentController,
-                        decoration: InputDecoration(labelText: 'Department'),
-                        readOnly: true,
-                      ),
-                      SizedBox(height: h*0.002,),
-                      TextField(
-                        controller: semesterController,
-                        decoration: InputDecoration(labelText: 'Semester'),
-                        readOnly: true,
-                      ),
+
                       SizedBox(height: h*0.002,),
                       DropdownButtonFormField<String>(
                         value: selectedPaper,
@@ -259,8 +268,6 @@ class _RegisterStudentState extends State<RegisterStudent> {
 
                       ),
                       SizedBox(height: h*0.009,),
-                      EassPassField(labelText: 'Password', controller: passController),
-                      SizedBox(height: h*0.022,),
 
                       GestureDetector(
                         onTap: () => _selectDate(context),
@@ -300,9 +307,13 @@ class _RegisterStudentState extends State<RegisterStudent> {
               ),
             ),
             SizedBox(height: h*0.022,),
-            EassButton(label: "Register", onPressed: (){}
+            EassButton(label: "Register", onPressed: (){
+
+            }
             ),
             SizedBox(height: h*0.022,),
+
+
 
 
 
@@ -313,42 +324,6 @@ class _RegisterStudentState extends State<RegisterStudent> {
   }
 
 
-  final _formfield = GlobalKey<FormState>();
   // RFID Card Real Time values
-  final CardValue cardValue = Get.put(CardValue());
 
-
-  /////////////////////////
-  /// Date & Time
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2050),
-    );
-
-    if (pickedDate != null && pickedDate != selectedDate) {
-      setState(() {
-        selectedDate = pickedDate;
-      });
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: selectedTime.hour + 1, minute: 0), // Next hour
-    );
-
-    if (pickedTime != null && pickedTime != selectedTime) {
-      setState(() {
-        selectedTime = pickedTime;
-        print(selectedTime);
-      });
-    }
-  }
 }

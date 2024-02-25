@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
+import '../../../Model/superadmin_present_absentfetch.dart';
 import '../../../constant.dart';
 import '../Admin Users/add_admin.dart';
 import '../admin_drawer.dart';
@@ -27,6 +28,23 @@ class Admin_Home extends StatefulWidget {
 
 
 class _Admin_HomeState extends State<Admin_Home> {
+
+  FirebaseServiceFetch _firebaseServiceFetch = FirebaseServiceFetch();
+  int presentCount = 0;
+  int absentCount = 0;
+  Future<void> fetchData() async {
+    int present = await _firebaseServiceFetch.getTotalPresentCount();
+    int absent = await _firebaseServiceFetch.getTotalAbsentCount();
+    setState(() {
+      presentCount = present;
+      absentCount = absent;
+    });
+  }
+
+
+
+
+  ////
   final CollectionReference _collectionRef = FirebaseFirestore.instance.collection('users');
 
   bool isLoading = true; // Flag to indicate whether data is still being fetched
@@ -38,6 +56,7 @@ class _Admin_HomeState extends State<Admin_Home> {
       setState(() {
         documentCount = querySnapshot.docs.length;
         isLoading = false; // Set the flag to indicate data is ready
+
       });
     } catch (error) {
       print('Error: $error');
@@ -52,6 +71,7 @@ class _Admin_HomeState extends State<Admin_Home> {
     // TODO: implement initState
     super.initState();
     _fetchDocumentCount();
+    fetchData();
   }
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -142,9 +162,9 @@ class _Admin_HomeState extends State<Admin_Home> {
                                      PieChartSectionData(
                                     value: 40,color: Colors.green,title: "$documentCount",),
                                     PieChartSectionData(
-                                        value: 15,color: Colors.red,title: "17"),
+                                        value: 15,color: Colors.red,title: "$absentCount"),
                                     PieChartSectionData(
-                                        value: 23,color: Colors.yellow,title: "50"),
+                                        value: 23,color: Colors.yellow,title: "$presentCount"),
                                   ]
                                 )
                               ),
@@ -183,7 +203,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                   ),
                                   Column(
                                     children: [
-                                      Text("50",style: TextStyle(fontSize: responsiveTextSize(30),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),),
+                                      Text("$presentCount",style: TextStyle(fontSize: responsiveTextSize(30),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),),
                                     ],
                                   ),
                                   SizedBox(height: h*0.01,),
@@ -202,7 +222,7 @@ class _Admin_HomeState extends State<Admin_Home> {
                                   ),
                                   Column(
                                     children: [
-                                      Text("17",style: TextStyle(fontSize: responsiveTextSize(30),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),),
+                                      Text("$absentCount",style: TextStyle(fontSize: responsiveTextSize(30),fontWeight: FontWeight.bold,fontFamily: "BoldFonts"),),
                                     ],
                                   ),
                                 ],

@@ -343,16 +343,11 @@ class _HomeState extends State<Home> {
                 ),
               ),
               SizedBox(height: h*0.04,),
-              EassButton(label: "Lagout", onPressed: (){
+              EassButton(label: "Lagout", onPressed: () async {
+                await FirebaseAuth.instance.signOut();
                 Get.to(SignIn());
               }),
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to the second page
-                  Get.to(YourScreen());
-                },
-                child: Text('Go to Second Page'),
-              ),
+
             ],
           ),
         ),

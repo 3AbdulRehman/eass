@@ -9,7 +9,7 @@ class TimeValue extends GetxController{
   var value = "Loading".obs;
 
   void fetchCardValue(){
-    _database.child('storedUID').onValue.listen((event) {
+    _database.child('time').onValue.listen((event) {
       final data = event.snapshot.value;
       if(data!= null){
         print(data);

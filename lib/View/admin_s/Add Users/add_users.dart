@@ -210,14 +210,17 @@ class _AddUsersState extends State<AddUsers> {
                     ),
 
                     SizedBox(height: h*0.022,),
-                    EassPassField(labelText: "Password", controller: studentpassController,
-                      validator: (value){
-                      if(value == null || value.isEmpty){
-                        return "Password is Required";
-                      }else{
-                        return null;
-                      }
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(left: 30,right: 30),
+                      child: EassPassField(labelText: "Password", controller: studentpassController,
+                        validator: (value){
+                        if(value == null || value.isEmpty){
+                          return "Password is Required";
+                        }else{
+                          return null;
+                        }
+                        },
+                      ),
                     ),
                     SizedBox(height: h * 0.022),
                     Padding(

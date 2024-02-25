@@ -178,7 +178,7 @@ class _UserDatabaseState extends State<UserDatabase> {
               pw.SizedBox(height: 18,),
               pw.Text('Time : ${user['time'] ?? 'N/A'}', style: pw.TextStyle(fontSize: 20)),
               pw.SizedBox(height: 18,),
-              pw.Text('Status : ${user[''] ?? 'N/A'}', style: pw.TextStyle(fontSize: 20)),
+              pw.Text('Status : ${user['status'] ?? 'N/A'}', style: pw.TextStyle(fontSize: 20)),
 
 
 
